@@ -76,7 +76,8 @@ DATA_FOR_DELETE_CONTACT_BY_ID_TESTS = [{"status_code": 400,
                                        {"status_code": 200,
                                         "contact_id": 1,
                                         "data": None,
-                                        "body": {"message": "contact delete successfully"}}
+                                        "body": {"message": "contact delete successfully"},
+                                        "get_status": 404}
                                        ]
 
 DATA_FOR_UPDATE_CONTACT_BY_ID_TESTS = [{"status_code": 400,

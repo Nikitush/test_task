@@ -2,7 +2,7 @@ import pytest
 
 from config_test import DATA_FOR_CREATE_CONTACT_TESTS, DATA_FOR_GET_ALL_CONTACTS_TESTS_WITHOUT_DATA,\
     DATA_FOR_GET_ALL_CONTACTS_TESTS, DATA_FOR_GET_CONTACT_BY_ID_TESTS, DATA_FOR_DELETE_CONTACT_BY_ID_TESTS,\
-    DATA_FOR_UPDATE_CONTACT_BY_ID_TESTS, DATA_FOR_CONTACT_INFO_AFTER_UPDATE_TESTS
+    DATA_FOR_UPDATE_CONTACT_BY_ID_TESTS, DATA_FOR_CONTACT_INFO_AFTER_UPDATE_TESTS, PREPARED_CONTACTS
 
 
 @pytest.mark.usefixtures('init_test_class')
@@ -14,6 +14,14 @@ class TestAPI:
         response = self.api.create_contact(json=data["data"])
         assert response.status_code_should_be(data["status_code"])
         assert response.body_should_be(data["body"])
+        if data["status_code"] == 200:
+            data["data"]["id"] = data["body"]["id"]
+            for key in PREPARED_CONTACTS[0].keys():
+                if key not in data["data"].keys():
+                    data["data"][key] = None
+            response = self.api.get_contact_by_id(contact_id=data["body"]["id"])
+            assert response.status_code_should_be(data["status_code"])
+            assert response.body_should_be(data["data"])
 
     @pytest.mark.get_all_contacts
     @pytest.mark.parametrize('data', DATA_FOR_GET_ALL_CONTACTS_TESTS_WITHOUT_DATA)
@@ -42,6 +50,9 @@ class TestAPI:
         response = self.api.delete_contact_by_id(contact_id=data["contact_id"], json=data["data"])
         assert response.status_code_should_be(data["status_code"])
         assert response.body_should_be(data["body"])
+        if data["status_code"] == 200:
+            response = self.api.get_contact_by_id(contact_id=data["contact_id"])
+            assert response.status_code_should_be(data["get_status"])
 
     @pytest.mark.update_contact_by_id
     @pytest.mark.parametrize('data', DATA_FOR_UPDATE_CONTACT_BY_ID_TESTS)
