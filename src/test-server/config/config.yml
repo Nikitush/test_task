@@ -1,0 +1,3 @@
+port: 8899
+db_path: /opt/test-server/database/server.db
+root_path: /opt/test-server

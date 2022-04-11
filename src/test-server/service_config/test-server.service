@@ -1,0 +1,13 @@
+[Unit]
+Description=Test Server
+
+[Service]
+Type=simple
+ExecStart=/opt/test-server/venv/bin/python3 /opt/test-server/main.py --config_path /opt/test-server/config/config.yml
+ExecStop=/bin/kill -SIGTERM $MAINPID
+KillMode=process
+Restart=on-failure
+User=root
+
+[Install]
+WantedBy=multi-user.target
